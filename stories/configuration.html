@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration | SUHOSIN</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="canonical" href="https://suhosin.org/stories/configuration.html">
+<link rel="icon" href="../favicon.png" sizes="32x32">
+<link rel="icon" href="../favicon_256x256.png" sizes="256x256">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="SektionEins">
+<meta property="og:site_name" content="SUHOSIN">
+<meta property="og:title" content="Configuration">
+<meta property="og:url" content="https://suhosin.org/stories/configuration.html">
+<meta property="og:description" content="Contents
+
+Logging Configuration
+suhosin.log.syslog
+suhosin.log.syslog.facility
+suhosin.log.syslog.priority
+suhosin.log.sapi
+suhosin.log.stdout
+suhosin.log.file
+suhosin.log.file.name
+suhosin.log.file.t">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-06-11T11:02:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://suhosin.org/">
+
+            <span id="blog-title">SUHOSIN</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="download.html" class="nav-link">Download</a>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Documentation</a>
+            <div class="dropdown-menu">
+                    <a href="feature-list.html" class="dropdown-item">Feature List</a>
+                    <a href="install.html" class="dropdown-item">Installing Suhosin</a>
+                    <a href="#" class="dropdown-item active">Configuration <span class="sr-only">(active)</span></a>
+                    <a href="howtos.html" class="dropdown-item">HOWTOs</a>
+                    <a href="faq.html" class="dropdown-item">FAQ</a>
+                    <a href="benchmark.html" class="dropdown-item">Benchmark</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Github</a>
+            <div class="dropdown-menu">
+                    <a href="https://raw.githubusercontent.com/sektioneins/suhosin/master/Changelog" class="dropdown-item">Changelog</a>
+                    <a href="https://github.com/sektioneins/suhosin" class="dropdown-item">Sources</a>
+                    <a href="https://github.com/sektioneins/suhosin/issues" class="dropdown-item">Bugtracker</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SektionEins</a>
+            <div class="dropdown-menu">
+                    <a href="https://sektioneins.de/en/index.html#services" class="dropdown-item">Security Audits</a>
+                    <a href="https://sektioneins.de/en/index.html#news" class="dropdown-item">News</a>
+                    <a href="https://sektioneins.de/en/kontakt.html" class="dropdown-item">Contact</a>
+            </div>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Configuration</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<!-- Configuration -->
+<div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="configuration.html#logging-configuration" id="id1">Logging Configuration</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-log-syslog" id="id2">suhosin.log.syslog</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-syslog-facility" id="id3">suhosin.log.syslog.facility</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-syslog-priority" id="id4">suhosin.log.syslog.priority</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-sapi" id="id5">suhosin.log.sapi</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-stdout" id="id6">suhosin.log.stdout</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-file" id="id7">suhosin.log.file</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-file-name" id="id8">suhosin.log.file.name</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-file-time" id="id9">suhosin.log.file.time</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-script" id="id10">suhosin.log.script</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-script-name" id="id11">suhosin.log.script.name</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-phpscript" id="id12">suhosin.log.phpscript</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-phpscript-name" id="id13">suhosin.log.phpscript.name</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-phpscript-is-safe" id="id14">suhosin.log.phpscript.is_safe</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-log-use-x-forwarded-for" id="id15">suhosin.log.use-x-forwarded-for</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="configuration.html#executor-options" id="id16">Executor Options</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-max-depth" id="id17">suhosin.executor.max_depth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-include-max-traversal" id="id18">suhosin.executor.include.max_traversal</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-include-whitelist" id="id19">suhosin.executor.include.whitelist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-include-blacklist" id="id20">suhosin.executor.include.blacklist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-include-allow-writable-files" id="id21">suhosin.executor.include.allow_writable_files</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-func-whitelist" id="id22">suhosin.executor.func.whitelist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-func-blacklist" id="id23">suhosin.executor.func.blacklist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-eval-whitelist" id="id24">suhosin.executor.eval.whitelist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-eval-blacklist" id="id25">suhosin.executor.eval.blacklist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-disable-eval" id="id26">suhosin.executor.disable_eval</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-disable-emodifier" id="id27">suhosin.executor.disable_emodifier</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-executor-allow-symlink" id="id28">suhosin.executor.allow_symlink</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="configuration.html#misc-options" id="id29">Misc Options</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-simulation" id="id30">suhosin.simulation</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-perdir" id="id31">suhosin.perdir</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-protectkey" id="id32">suhosin.protectkey</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-coredump" id="id33">suhosin.coredump</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-stealth" id="id34">suhosin.stealth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-apc-bug-workaround" id="id35">suhosin.apc_bug_workaround</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-disable-display-errors" id="id36">suhosin.disable.display_errors</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-multiheader" id="id37">suhosin.multiheader</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-mail-protect" id="id38">suhosin.mail.protect</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-memory-limit" id="id39">suhosin.memory_limit</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="configuration.html#sql-injection-protection" id="id40">SQL Injection Protection</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-bailout-on-error" id="id41">suhosin.sql.bailout_on_error</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-user-match" id="id42">suhosin.sql.user_match</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-user-prefix" id="id43">suhosin.sql.user_prefix</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-user-postfix" id="id44">suhosin.sql.user_postfix</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-comment" id="id45">suhosin.sql.comment</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-opencomment" id="id46">suhosin.sql.opencomment</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-multiselect" id="id47">suhosin.sql.multiselect</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-sql-union" id="id48">suhosin.sql.union</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="configuration.html#transparent-encryption-options" id="id49">Transparent Encryption Options</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-session-encrypt" id="id50">suhosin.session.encrypt</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-cryptkey" id="id51">suhosin.session.cryptkey</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-cryptua" id="id52">suhosin.session.cryptua</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-cryptdocroot" id="id53">suhosin.session.cryptdocroot</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-cryptraddr" id="id54">suhosin.session.cryptraddr</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-checkraddr" id="id55">suhosin.session.checkraddr</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-encrypt" id="id56">suhosin.cookie.encrypt</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-cryptkey" id="id57">suhosin.cookie.cryptkey</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-cryptua" id="id58">suhosin.cookie.cryptua</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-cryptdocroot" id="id59">suhosin.cookie.cryptdocroot</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-cryptraddr" id="id60">suhosin.cookie.cryptraddr</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-checkraddr" id="id61">suhosin.cookie.checkraddr</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-cryptlist" id="id62">suhosin.cookie.cryptlist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-plainlist" id="id63">suhosin.cookie.plainlist</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="configuration.html#filtering-options" id="id64">Filtering Options</a><ul>
+<li><a class="reference internal" href="configuration.html#suhosin-filter-action" id="id65">suhosin.filter.action</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-array-depth" id="id66">suhosin.cookie.max_array_depth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-array-index-length" id="id67">suhosin.cookie.max_array_index_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-name-length" id="id68">suhosin.cookie.max_name_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-totalname-length" id="id69">suhosin.cookie.max_totalname_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-value-length" id="id70">suhosin.cookie.max_value_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-max-vars" id="id71">suhosin.cookie.max_vars</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-disallow-nul" id="id72">suhosin.cookie.disallow_nul</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-cookie-disallow-ws" id="id73">suhosin.cookie.disallow_ws</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-array-depth" id="id74">suhosin.get.max_array_depth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-array-index-length" id="id75">suhosin.get.max_array_index_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-name-length" id="id76">suhosin.get.max_name_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-totalname-length" id="id77">suhosin.get.max_totalname_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-value-length" id="id78">suhosin.get.max_value_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-max-vars" id="id79">suhosin.get.max_vars</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-disallow-nul" id="id80">suhosin.get.disallow_nul</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-get-disallow-ws" id="id81">suhosin.get.disallow_ws</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-array-depth" id="id82">suhosin.post.max_array_depth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-array-index-length" id="id83">suhosin.post.max_array_index_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-name-length" id="id84">suhosin.post.max_name_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-totalname-length" id="id85">suhosin.post.max_totalname_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-value-length" id="id86">suhosin.post.max_value_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-max-vars" id="id87">suhosin.post.max_vars</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-disallow-nul" id="id88">suhosin.post.disallow_nul</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-post-disallow-ws" id="id89">suhosin.post.disallow_ws</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-array-index-blacklist" id="id90">suhosin.request.array_index_blacklist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-array-index-whitelist" id="id91">suhosin.request.array_index_whitelist</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-array-depth" id="id92">suhosin.request.max_array_depth</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-array-index-length" id="id93">suhosin.request.max_array_index_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-totalname-length" id="id94">suhosin.request.max_totalname_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-value-length" id="id95">suhosin.request.max_value_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-vars" id="id96">suhosin.request.max_vars</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-max-varname-length" id="id97">suhosin.request.max_varname_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-disallow-nul" id="id98">suhosin.request.disallow_nul</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-request-disallow-ws" id="id99">suhosin.request.disallow_ws</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-max-uploads" id="id100">suhosin.upload.max_uploads</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-max-newlines" id="id101">suhosin.upload.max_newlines</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-disallow-elf" id="id102">suhosin.upload.disallow_elf</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-disallow-binary" id="id103">suhosin.upload.disallow_binary</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-remove-binary" id="id104">suhosin.upload.remove_binary</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-allow-utf8" id="id105">suhosin.upload.allow_utf8</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-upload-verification-script" id="id106">suhosin.upload.verification_script</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-session-max-id-length" id="id107">suhosin.session.max_id_length</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-server-encode" id="id108">suhosin.server.encode</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-server-strip" id="id109">suhosin.server.strip</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-rand-seedingkey" id="id110">suhosin.rand.seedingkey</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-rand-reseed-every-request" id="id111">suhosin.rand.reseed_every_request</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-srand-ignore" id="id112">suhosin.srand.ignore</a></li>
+<li><a class="reference internal" href="configuration.html#suhosin-mt-srand-ignore" id="id113">suhosin.mt_srand.ignore</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<style>
+h3 {
+        font-size: 18px;
+        background-color: #9f9;
+        margin-top: 20px;
+        margin-botton: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+}
+</style>
+<p>Suhosin's features are all configured through the php.ini configuration file. Here you can find descriptions of all supported options.</p>
+<p>For most users the Suhosin will work out of the box without any change to the default configuration needed.</p>
+<p>When you only use the Suhosin-Patch only the logging features are supported. When you only use the Suhosin-Extension you cannot use the predefined constants for configuration. This is due to the way php.ini constant support is implemented in PHP.</p>
+<p>Notes:</p>
+<ul class="simple">
+<li>This documentation refers to the Suhosin extension version 0.9.38.</li>
+<li>Some features are marked <em>experimental</em> and must be activated at compile time using <em>configure --enable-suhosin-experimental</em>.</li>
+</ul>
+<div class="section" id="logging-configuration">
+<h2><a class="toc-backref" href="configuration.html#id1">Logging Configuration</a></h2>
+<div class="section" id="suhosin-log-syslog">
+<h3><a class="toc-backref" href="configuration.html#id2">suhosin.log.syslog</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: S_ALL &amp; ~S_SQL</li>
+</ul>
+<p>Defines what classes of security alerts are logged to the syslog daemon. Logging of errors of the class S_MEMORY are always logged to syslog, no matter what this configuration says, because a corrupted heap could mean that the other logging options will malfunction during the logging process.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%">
+<col width="15%">
+<col width="69%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">Constant</th>
+<th class="head">Value</th>
+<th class="head">Description</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>S_MEMORY</td>
+<td>1</td>
+<td>All canary violations and the safe unlink
+protection use this class</td>
+</tr>
+<tr>
+<td>S_MISC</td>
+<td>2</td>
+<td>All log messages (f.e. format string protection)
+that do not fit in other classes use this class</td>
+</tr>
+<tr>
+<td>S_VARS</td>
+<td>4</td>
+<td>All variable filters trigger this class</td>
+</tr>
+<tr>
+<td>S_FILES</td>
+<td>8</td>
+<td>All violations triggered by the uploaded files
+filter use this class</td>
+</tr>
+<tr>
+<td>S_INCLUDE</td>
+<td>16</td>
+<td>The protection against malicious include filenames
+use this class</td>
+</tr>
+<tr>
+<td>S_SQL</td>
+<td>32</td>
+<td>Failed SQL queries are logged with this class
+(not yet supported in Suhosin BETA)</td>
+</tr>
+<tr>
+<td>S_EXECUTOR</td>
+<td>64</td>
+<td>The execution depth protection uses this logging
+class</td>
+</tr>
+<tr>
+<td>S_MAIL</td>
+<td>128</td>
+<td>The mail() header newline protection uses this
+logging class</td>
+</tr>
+<tr>
+<td>S_SESSION</td>
+<td>256</td>
+<td>The transparent session protection uses this
+logging class</td>
+</tr>
+<tr>
+<td>S_ALL</td>
+<td>511</td>
+<td>Combines all classes</td>
+</tr>
+</tbody>
+</table>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value, e.g. <cite>suhosin.log.syslog=511</cite>.</p>
+</div>
+<div class="section" id="suhosin-log-syslog-facility">
+<h3><a class="toc-backref" href="configuration.html#id3">suhosin.log.syslog.facility</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: LOG_USER</li>
+</ul>
+<p>Defines the syslog facility that is used when ALERTs are logged to syslog. Depending on your system type (syslogd) the following facilities are available. Please check your system's include header if the values are the same for your syslogd.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="67%">
+<col width="33%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">Constant</th>
+<th class="head">Value</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>LOG_KERN</td>
+<td>8</td>
+</tr>
+<tr>
+<td>LOG_USER</td>
+<td>9</td>
+</tr>
+<tr>
+<td>LOG_MAIL</td>
+<td>10</td>
+</tr>
+<tr>
+<td>LOG_DAEMON</td>
+<td>11</td>
+</tr>
+<tr>
+<td>LOG_AUTH</td>
+<td>12</td>
+</tr>
+<tr>
+<td>LOG_SYSLOG</td>
+<td>13</td>
+</tr>
+<tr>
+<td>LOG_LPR</td>
+<td>14</td>
+</tr>
+<tr>
+<td>LOG_NEWS</td>
+<td>15</td>
+</tr>
+<tr>
+<td>LOG_UUCP</td>
+<td>16</td>
+</tr>
+<tr>
+<td>LOG_CRON</td>
+<td>17</td>
+</tr>
+<tr>
+<td>LOG_AUTHPRIV</td>
+<td>18</td>
+</tr>
+<tr>
+<td>LOG_LOCAL0</td>
+<td>24</td>
+</tr>
+<tr>
+<td>LOG_LOCAL1</td>
+<td>25</td>
+</tr>
+<tr>
+<td>LOG_LOCAL2</td>
+<td>26</td>
+</tr>
+<tr>
+<td>LOG_LOCAL3</td>
+<td>27</td>
+</tr>
+<tr>
+<td>LOG_LOCAL4</td>
+<td>28</td>
+</tr>
+<tr>
+<td>LOG_LOCAL5</td>
+<td>29</td>
+</tr>
+<tr>
+<td>LOG_LOCAL6</td>
+<td>30</td>
+</tr>
+<tr>
+<td>LOG_LOCAL7</td>
+<td>31</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="suhosin-log-syslog-priority">
+<h3><a class="toc-backref" href="configuration.html#id4">suhosin.log.syslog.priority</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: LOG_ALERT</li>
+</ul>
+<p>Defines the syslog priority that is used when ALERTs are logged to syslog. Depending on your system type (syslogd) the following priorities are available. Please check your system's include header if the values are the same for your syslogd.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="63%">
+<col width="37%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">Constant</th>
+<th class="head">Value</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>LOG_EMERG</td>
+<td>0</td>
+</tr>
+<tr>
+<td>LOG_ALERT</td>
+<td>1</td>
+</tr>
+<tr>
+<td>LOG_CRIT</td>
+<td>2</td>
+</tr>
+<tr>
+<td>LOG_WARNING</td>
+<td>3</td>
+</tr>
+<tr>
+<td>LOG_NOTICE</td>
+<td>4</td>
+</tr>
+<tr>
+<td>LOG_INFO</td>
+<td>5</td>
+</tr>
+<tr>
+<td>LOG_DEBUG</td>
+<td>6</td>
+</tr>
+<tr>
+<td>LOG_ERR</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="suhosin-log-sapi">
+<h3><a class="toc-backref" href="configuration.html#id5">suhosin.log.sapi</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines what classes of security alerts are logged through the SAPI error log. For a list of available classes see table 1.</p>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value.</p>
+</div>
+<div class="section" id="suhosin-log-stdout">
+<h3><a class="toc-backref" href="configuration.html#id6">suhosin.log.stdout</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines what classes of security alerts are logged through STDOUT. For a list of available classes see table 1.</p>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value.</p>
+<p>IMPORTANT NOTE: This option is meant for debugging purposes and unittests only and should not be used in production.</p>
+</div>
+<div class="section" id="suhosin-log-file">
+<h3><a class="toc-backref" href="configuration.html#id7">suhosin.log.file</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines what classes of security alerts are logged to a separate Suhosin log file set by suhosin.log.file.name.</p>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value.</p>
+</div>
+<div class="section" id="suhosin-log-file-name">
+<h3><a class="toc-backref" href="configuration.html#id8">suhosin.log.file.name</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Defines the full path to a dedicated Suhosin log file.</p>
+</div>
+<div class="section" id="suhosin-log-file-time">
+<h3><a class="toc-backref" href="configuration.html#id9">suhosin.log.file.time</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Specifies if suhosin.log.file contains timestamp for each log entry.</p>
+<p>IMPORTANT NOTE: This option is meant for debugging purposes and unittests only and should not be used in production.</p>
+</div>
+<div class="section" id="suhosin-log-script">
+<h3><a class="toc-backref" href="configuration.html#id10">suhosin.log.script</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines what classes of security alerts are logged through the external logging script. For a list of available classes see table 1. An exception is the S_MEMORY class. It cannot be logged by a script, because S_MEMORY is triggered by buffer overflows etc... which means the process is in an unstable state.</p>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value.</p>
+</div>
+<div class="section" id="suhosin-log-script-name">
+<h3><a class="toc-backref" href="configuration.html#id11">suhosin.log.script.name</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Defines the full path to an external logging script. The script is called with 2 parameters. The first one is the alert class in string notation and the second parameter is the log message. This can be used for example to mail failing MySQL queries to your email address, because on a production system these things should never happen (S_SQL not yet supported by Suhosin).</p>
+</div>
+<div class="section" id="suhosin-log-phpscript">
+<h3><a class="toc-backref" href="configuration.html#id12">suhosin.log.phpscript</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines what classes of security alerts are logged through the defined PHP script. For a list of available classes see table 1. Please notice, that only those classes are allowed, that can be triggered during script execution. An exception is the S_MEMORY class. It cannot be logged by a PHP script, because S_MEMORY is triggered by buffer overflows etc... which means the process is in an unstable state.</p>
+<p>Using constant names is only supported with the Suhosin-Patch. If in doubt, use the numeric value.</p>
+</div>
+<div class="section" id="suhosin-log-phpscript-name">
+<h3><a class="toc-backref" href="configuration.html#id13">suhosin.log.phpscript.name</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Defines the full path to a PHP logging script. The script is called with 2 variables registered in the current scope: SUHOSIN_ERRORCLASS and SUHOSIN_ERROR. The first one is the alert class and the second variable is the log message. This can be used for example to mail attempted remote URL include attacks to your email address.</p>
+</div>
+<div class="section" id="suhosin-log-phpscript-is-safe">
+<h3><a class="toc-backref" href="configuration.html#id14">suhosin.log.phpscript.is_safe</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Disables open_basedir (and safe_mode for older PHP versions &lt; 5.4) when executing suhosin.log.phpscript.name.</p>
+</div>
+<div class="section" id="suhosin-log-use-x-forwarded-for">
+<h3><a class="toc-backref" href="configuration.html#id15">suhosin.log.use-x-forwarded-for</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>When the Suhosin logs an error the log message also contains the IP of the attacker. Usually this IP is retrieved from the REMOTE_ADDR SAPI environment variable. With this switch it is possible to change this behavior to read the IP from the X-Forwarded-For HTTP header. This is for example necessary when your PHP server runs behind a reverse proxy.</p>
+</div>
+</div>
+<div class="section" id="executor-options">
+<h2><a class="toc-backref" href="configuration.html#id16">Executor Options</a></h2>
+<div class="section" id="suhosin-executor-max-depth">
+<h3><a class="toc-backref" href="configuration.html#id17">suhosin.executor.max_depth</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 750</li>
+</ul>
+<p>Defines the maximum stack depth allowed by the executor before it stops the script. Without this function an endless recursion in a PHP script could crash the PHP executor or trigger the configured memory_limit. A value of '0' disables this feature.</p>
+<p>(Before 0.9.37, the default value was 0.)</p>
+</div>
+<div class="section" id="suhosin-executor-include-max-traversal">
+<h3><a class="toc-backref" href="configuration.html#id18">suhosin.executor.include.max_traversal</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Defines how many '../' an include filename needs to contain to be considered an attack and stopped. A value of '2' will block '../../etc/passwd', while a value of '3' will allow it. Most PHP applications should work flawlessly with values '4' or '5'. A value of '0' disables this feature.</p>
+</div>
+<div class="section" id="suhosin-executor-include-whitelist">
+<h3><a class="toc-backref" href="configuration.html#id19">suhosin.executor.include.whitelist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated whitelist of URL schemes that are allowed to be included from include or require statements. Additionally to URL schemes it is possible to specify the beginning of allowed URLs. (f.e.: php://stdin) If no whitelist is specified, then the blacklist is evaluated.</p>
+<p>Notes:</p>
+<ul class="simple">
+<li>This setting deactivates suhosin.executor.include.blacklist.</li>
+<li>If both suhosin.executor.include.whitelist and suhosin.executor.include.blacklist are unset or empty, all URLs will be blocked. This is the default.</li>
+</ul>
+</div>
+<div class="section" id="suhosin-executor-include-blacklist">
+<h3><a class="toc-backref" href="configuration.html#id20">suhosin.executor.include.blacklist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated blacklist of URL schemes that are not allowed to be included from include or require statements. Additionally to URL schemes it is possible to specify the beginning of allowed URLs. (f.e.: php://stdin) If no blacklist and no whitelist is specified all URL schemes are forbidden.</p>
+</div>
+<div class="section" id="suhosin-executor-include-allow-writable-files">
+<h3><a class="toc-backref" href="configuration.html#id21">suhosin.executor.include.allow_writable_files</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Turn this flag off to prevent PHP from executing writable PHP files. This can prevent attackers from executing code that was uploaded before.</p>
+<p>Note: Some software such as web-installers or web-based plugin installers won't work out of the box with this flag turned off.</p>
+</div>
+<div class="section" id="suhosin-executor-func-whitelist">
+<h3><a class="toc-backref" href="configuration.html#id22">suhosin.executor.func.whitelist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated whitelist of functions that are allowed to be called. If the whitelist is empty the blacklist is evaluated, otherwise calling a function not in the whitelist will terminate the script and get logged.</p>
+<p>Note: This setting deactivates suhosin.executor.func.blacklist.</p>
+</div>
+<div class="section" id="suhosin-executor-func-blacklist">
+<h3><a class="toc-backref" href="configuration.html#id23">suhosin.executor.func.blacklist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated blacklist of functions that are not allowed to be called. If no whitelist is given, calling a function within the blacklist will terminate the script and get logged.</p>
+</div>
+<div class="section" id="suhosin-executor-eval-whitelist">
+<h3><a class="toc-backref" href="configuration.html#id24">suhosin.executor.eval.whitelist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated whitelist of functions that are allowed to be called from within eval(). If the whitelist is empty the blacklist is evaluated, otherwise calling a function not in the whitelist will terminate the script and get logged. Please read the instructions carefully.</p>
+<p>Note: This setting deactivates suhosin.executor.eval.blacklist.</p>
+</div>
+<div class="section" id="suhosin-executor-eval-blacklist">
+<h3><a class="toc-backref" href="configuration.html#id25">suhosin.executor.eval.blacklist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Comma separated blacklist of functions that are not allowed to be called from within eval(). If no whitelist is given, calling a function within the blacklist will terminate the script and get logged. Please read the instructions carefully.</p>
+</div>
+<div class="section" id="suhosin-executor-disable-eval">
+<h3><a class="toc-backref" href="configuration.html#id26">suhosin.executor.disable_eval</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>eval() is a very dangerous statement and therefore you might want to disable it completely. Deactivating it will however break lots of scripts. Because every violation is logged, this allows finding all places where eval() is used.</p>
+</div>
+<div class="section" id="suhosin-executor-disable-emodifier">
+<h3><a class="toc-backref" href="configuration.html#id27">suhosin.executor.disable_emodifier</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>The /e modifier inside preg_replace() allows code execution. Often it is the cause for remote code execution exploits. It is wise to deactivate this feature and test where in the application it is used. The developer using the /e modifier should be made aware that he should use preg_replace_callback() instead.</p>
+</div>
+<div class="section" id="suhosin-executor-allow-symlink">
+<h3><a class="toc-backref" href="configuration.html#id28">suhosin.executor.allow_symlink</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>This flag reactivates symlink() when open_basedir is used, which is disabled by default in Suhosin &gt;= 0.9.6. Allowing symlink() while open_basedir is used is actually a security risk.</p>
+</div>
+</div>
+<div class="section" id="misc-options">
+<h2><a class="toc-backref" href="configuration.html#id29">Misc Options</a></h2>
+<div class="section" id="suhosin-simulation">
+<h3><a class="toc-backref" href="configuration.html#id30">suhosin.simulation</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>If you fear that Suhosin breaks your application, you can activate Suhosin's simulation mode with this flag. When Suhosin runs in simulation mode, violations are logged as usual, but nothing is blocked or removed from the request. (Transparent Encryptions are NOT deactivated in simulation mode.)</p>
+</div>
+<div class="section" id="suhosin-perdir">
+<h3><a class="toc-backref" href="configuration.html#id31">suhosin.perdir</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default: "0"</li>
+</ul>
+<p>Allow certain categories of config directives to be changed by .htaccess for each directory individually. Possible values are "l" (log), "e" (exec), "g" (get), "c" (cookie), "p" (post), "r" (request), "s" (sql), "u" (upload), "m" (misc) or any combination, e.g. "legcprsum" to allow everything. Both "0" and no value disable this feature.</p>
+</div>
+<div class="section" id="suhosin-protectkey">
+<h3><a class="toc-backref" href="configuration.html#id32">suhosin.protectkey</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Prevent Suhosin's secret key material (suhosin.cookie.cryptkey, suhosin.session.cryptkey, suhosin.rand.seedingkey) from being exposed by phpinfo().</p>
+</div>
+<div class="section" id="suhosin-coredump">
+<h3><a class="toc-backref" href="configuration.html#id33">suhosin.coredump</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Controls if suhosin coredumps when the optional suhosin patch detects a buffer overflow, memory corruption or double free. This is only for debugging purposes and should not be activated.</p>
+</div>
+<div class="section" id="suhosin-stealth">
+<h3><a class="toc-backref" href="configuration.html#id34">suhosin.stealth</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>controls if suhosin loads in stealth mode when it is not the only zend_extension (Required for full compatibility with certain encoders that consider open source untrusted. e.g. ionCube, Zend)</p>
+</div>
+<div class="section" id="suhosin-apc-bug-workaround">
+<h3><a class="toc-backref" href="configuration.html#id35">suhosin.apc_bug_workaround</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>APC 3.0.12(p1/p2) uses reserved resources without requesting a resource slot first. It always uses resource slot 0. If Suhosin got this slot assigned APC will overwrite the information Suhosin stores in this slot. When this flag is set Suhosin will request 2 Slots and use the second one. This allows working correctly with these buggy APC versions.</p>
+</div>
+<div class="section" id="suhosin-disable-display-errors">
+<h3><a class="toc-backref" href="configuration.html#id36">suhosin.disable.display_errors</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default: 0</li>
+</ul>
+<p>Prevent PHP from setting display_errors programmatically. "0" means off. Any one of "1", "on", "yes", "true" means on. "fail" or "2" (or greater values) will let PHP know that the value change failed.</p>
+</div>
+<div class="section" id="suhosin-multiheader">
+<h3><a class="toc-backref" href="configuration.html#id37">suhosin.multiheader</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>This directive controls if multiple headers are allowed or not in a header() call. By default the Suhosin forbids this. (HTTP headers spanning multiple lines are still allowed).</p>
+</div>
+<div class="section" id="suhosin-mail-protect">
+<h3><a class="toc-backref" href="configuration.html#id38">suhosin.mail.protect</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>This directive controls if the mail() header protection is activated or not and to what degree it is activated. The appended table lists the possible activation levels.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%">
+<col width="91%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">Value</th>
+<th class="head">Description</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>0</td>
+<td>mail() header protection is disabled</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Disallows newlines in Subject:, To: headers and double newlines in
+additional headers</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Additionally disallows To:, CC:, BCC: in additional headers</td>
+</tr>
+</tbody>
+</table>
+<p>Logging of this class of alerts is controlled by the new S_MAIL constant.</p>
+</div>
+<div class="section" id="suhosin-memory-limit">
+<h3><a class="toc-backref" href="configuration.html#id39">suhosin.memory_limit</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>As long scripts are not running within safe_mode they are free to change the memory_limit to whatever value they want. Suhosin changes this fact and disallows setting the memory_limit to a value greater than the one the script started with, when this option is left at 0. A value greater than 0 means that Suhosin will disallow scripts setting the memory_limit to a value above this configured hard limit. This is for example useful if you want to run the script normally with a limit of 16M but image processing scripts may raise it to 20M.</p>
+</div>
+</div>
+<div class="section" id="sql-injection-protection">
+<h2><a class="toc-backref" href="configuration.html#id40">SQL Injection Protection</a></h2>
+<p>This class of features is experimental and still in development. As of Suhosin version 0.9.36 only preliminary MySQL and Mysqli support was added.</p>
+<div class="section" id="suhosin-sql-bailout-on-error">
+<h3><a class="toc-backref" href="configuration.html#id41">suhosin.sql.bailout_on_error</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>(Planned feature. This is not yet supported.) When an SQL Query fails scripts often spit out a bunch of useful information for possible attackers. When this configuration directive is turned on, the script will silently terminate, after the problem has been logged.</p>
+</div>
+<div class="section" id="suhosin-sql-user-match">
+<h3><a class="toc-backref" href="configuration.html#id42">suhosin.sql.user_match</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>(introduced in 0.9.37) The SQL username must match this wildcard pattern or the connect function will fail and return FALSE. Example: <cite>suhosin.sql.user_match = public_*</cite></p>
+</div>
+<div class="section" id="suhosin-sql-user-prefix">
+<h3><a class="toc-backref" href="configuration.html#id43">suhosin.sql.user_prefix</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>This is an experimental feature for shared environments. With this configuration option it is possible to specify a prefix that is automatically prepended to the database username, whenever a database connection is made. (Unless the username starts with the prefix)</p>
+<p>With this feature it is possible for shared hosters to disallow customers to connect with the usernames of other customers. This feature is experimental, because support for PDO and PostgreSQL are not yet implemented.</p>
+</div>
+<div class="section" id="suhosin-sql-user-postfix">
+<h3><a class="toc-backref" href="configuration.html#id44">suhosin.sql.user_postfix</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>This is an experimental feature for shared environments. With this configuration option it is possible to specify a postfix that is automatically appended to the database username, whenever a database connection is made. (Unless the username end with the postfix)</p>
+<p>With this feature it is possible for shared hosters to disallow customers to connect with the usernames of other customers. This feature is experimental, because support for PDO and PostgreSQL are not yet implemented.</p>
+</div>
+<div class="section" id="suhosin-sql-comment">
+<h3><a class="toc-backref" href="configuration.html#id45">suhosin.sql.comment</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>This is an experimental feature. Alert if an SQL query contains one or more comments starting with --, /* or #. A value of 1 logs the alert; 2 or greater let the call fail.</p>
+<p>Note: Mysql conditional statements starting with <tt class="docutils literal">/*!</tt> are exempt if used with Mysqli.</p>
+</div>
+<div class="section" id="suhosin-sql-opencomment">
+<h3><a class="toc-backref" href="configuration.html#id46">suhosin.sql.opencomment</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>This is an experimental feature.
+Alert if a MySQL comment was started but not closed: <tt class="docutils literal">/*</tt> without <tt class="docutils literal">*/</tt>. A value of 1 logs the alert; 2 or greater let the call fail.</p>
+</div>
+<div class="section" id="suhosin-sql-multiselect">
+<h3><a class="toc-backref" href="configuration.html#id47">suhosin.sql.multiselect</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>This is an experimental feature.
+Alert if an SQL query contains more than one SELECT statement. A value of 1 logs the alert; 2 or greater let the call fail.</p>
+<p>Note: This flag will recognise multiple statements as well as subselects, e.g. "SELECT 1; SELECT 2" and "SELECT * FROM (SELECT 1)".</p>
+</div>
+<div class="section" id="suhosin-sql-union">
+<h3><a class="toc-backref" href="configuration.html#id48">suhosin.sql.union</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>This is an experimental feature.
+Alert if an SQL query contains one or more UNIONs.
+A value of 1 logs the alert; 2 or greater let the call fail.</p>
+</div>
+</div>
+<div class="section" id="transparent-encryption-options">
+<h2><a class="toc-backref" href="configuration.html#id49">Transparent Encryption Options</a></h2>
+<div class="section" id="suhosin-session-encrypt">
+<h3><a class="toc-backref" href="configuration.html#id50">suhosin.session.encrypt</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that decides if the transparent session encryption is activated or not.</p>
+</div>
+<div class="section" id="suhosin-session-cryptkey">
+<h3><a class="toc-backref" href="configuration.html#id51">suhosin.session.cryptkey</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Session data can be encrypted transparently. The encryption key used consists of this user defined string (which can be altered by a script via ini_set()) and optionally the User-Agent, the Document-Root and 0-4 octects of the REMOTE_ADDR.</p>
+</div>
+<div class="section" id="suhosin-session-cryptua">
+<h3><a class="toc-backref" href="configuration.html#id52">suhosin.session.cryptua</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Flag that decides if the transparent session encryption key depends on the User-Agent field. (When activated this feature transparently adds a little bit protection against session fixation/hijacking attacks)</p>
+</div>
+<div class="section" id="suhosin-session-cryptdocroot">
+<h3><a class="toc-backref" href="configuration.html#id53">suhosin.session.cryptdocroot</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that decides if the transparent session encryption key depends on the Documentroot field.</p>
+</div>
+<div class="section" id="suhosin-session-cryptraddr">
+<h3><a class="toc-backref" href="configuration.html#id54">suhosin.session.cryptraddr</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Number of octets (0-4) from the REMOTE_ADDR that the transparent session encryption key depends on. Keep in mind that this should not be used on sites that have visitors from big ISPs, because their IP address often changes during a session. But this feature might be interesting for admin interfaces or intranets. When used wisely this is a transparent protection against session hijacking/fixation. This feature supports IPv4 only.</p>
+</div>
+<div class="section" id="suhosin-session-checkraddr">
+<h3><a class="toc-backref" href="configuration.html#id55">suhosin.session.checkraddr</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Number of octets (0-4) from the REMOTE_ADDR that have to match to decrypt the session. The difference to suhosin.session.cryptaddr is, that the IP is not part of the encryption key, so that the same session can be used for different areas with different protection levels on the site. This feature supports IPv4 only.</p>
+</div>
+<div class="section" id="suhosin-cookie-encrypt">
+<h3><a class="toc-backref" href="configuration.html#id56">suhosin.cookie.encrypt</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Flag that decides if the transparent cookie encryption is activated or not.</p>
+</div>
+<div class="section" id="suhosin-cookie-cryptkey">
+<h3><a class="toc-backref" href="configuration.html#id57">suhosin.cookie.cryptkey</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>Cookies can be encrypted transparently. The encryption key used consists of this user defined string and optionally the User-Agent, the Document-Root and 0-4 octects of the REMOTE_ADDR.</p>
+</div>
+<div class="section" id="suhosin-cookie-cryptua">
+<h3><a class="toc-backref" href="configuration.html#id58">suhosin.cookie.cryptua</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that decides if the transparent session encryption key depends on the User-Agent field. (When activated this feature transparently adds a little bit protection against session fixation/hijacking attacks (if only session cookies are allowed))</p>
+</div>
+<div class="section" id="suhosin-cookie-cryptdocroot">
+<h3><a class="toc-backref" href="configuration.html#id59">suhosin.cookie.cryptdocroot</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that decides if the transparent cookie encryption key depends on the Documentroot field.</p>
+</div>
+<div class="section" id="suhosin-cookie-cryptraddr">
+<h3><a class="toc-backref" href="configuration.html#id60">suhosin.cookie.cryptraddr</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Number of octets (0-4) from the REMOTE_ADDR that the transparent cookie encryption key depends on. Keep in mind that this should not be used on sites that have visitors from big ISPs, because their IP address often changes during a session. But this feature might be interesting for admin interfaces or intranets. When used wisely this is a transparent protection against session hijacking/fixation. This feature supports IPv4 only.</p>
+</div>
+<div class="section" id="suhosin-cookie-checkraddr">
+<h3><a class="toc-backref" href="configuration.html#id61">suhosin.cookie.checkraddr</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 0</li>
+</ul>
+<p>Number of octets (0-4) from the REMOTE_ADDR that have to match to decrypt the cookie. The difference to suhosin.cookie.cryptaddr is, that the IP is not part of the encryption key, so that the same cookie can be used for different areas with different protection levels on the site. This feature supports IPv4 only.</p>
+</div>
+<div class="section" id="suhosin-cookie-cryptlist">
+<h3><a class="toc-backref" href="configuration.html#id62">suhosin.cookie.cryptlist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>In case not all cookies are supposed to get encrypted this is a comma separated list of cookie names that should get encrypted. All other cookies will not get touched.</p>
+<p>Note: Cookies handled on client side with JavaScript as well as on server side should not be encrypted, e.g. listed in suhosin.cookie.plainlist or omitted in suhosin.cookie.cryptlist.</p>
+</div>
+<div class="section" id="suhosin-cookie-plainlist">
+<h3><a class="toc-backref" href="configuration.html#id63">suhosin.cookie.plainlist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>In case some cookies should not be encrypted this is a comma separated list of cookies that do not get encrypted. All other cookies will be encrypted.</p>
+<p>Note: This setting deactivates suhosin.cookie.cryptlist.</p>
+</div>
+</div>
+<div class="section" id="filtering-options">
+<h2><a class="toc-backref" href="configuration.html#id64">Filtering Options</a></h2>
+<div class="section" id="suhosin-filter-action">
+<h3><a class="toc-backref" href="configuration.html#id65">suhosin.filter.action</a></h3>
+<ul class="simple">
+<li>Type: Mixed</li>
+<li>Default:</li>
+</ul>
+<p>Defines the reaction of Suhosin on a filter violation. Following possible actions are supported</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%">
+<col width="59%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td> </td>
+<td>Normal action is simply blocking the
+variable from being registered</td>
+</tr>
+<tr>
+<td>402</td>
+<td>Do not execute the script and return a
+HTTP 402 response code</td>
+</tr>
+<tr>
+<td>[302,]http://www.example.com</td>
+<td>Redirect to <a class="reference external" href="http://www.example.com">http://www.example.com</a> instead
+of executing. Optionally set a specific
+HTTP response code</td>
+</tr>
+<tr>
+<td>[402,]/var/scripts/badguy.php</td>
+<td>Execute a specific PHP script instead of
+the requested script. Optionally set a
+specific HTTP response code</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="suhosin-cookie-max-array-depth">
+<h3><a class="toc-backref" href="configuration.html#id66">suhosin.cookie.max_array_depth</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 50</li>
+</ul>
+<p>Defines the maximum depth an array variable may have, when registered through the COOKIE.</p>
+<p>Note: Array depth is not the number of elements within an array.</p>
+</div>
+<div class="section" id="suhosin-cookie-max-array-index-length">
+<h3><a class="toc-backref" href="configuration.html#id67">suhosin.cookie.max_array_index_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of array indices for variables registered through the COOKIE.</p>
+</div>
+<div class="section" id="suhosin-cookie-max-name-length">
+<h3><a class="toc-backref" href="configuration.html#id68">suhosin.cookie.max_name_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of variable names for variables registered through the COOKIE. For array variables this is the name in front of the indices.</p>
+</div>
+<div class="section" id="suhosin-cookie-max-totalname-length">
+<h3><a class="toc-backref" href="configuration.html#id69">suhosin.cookie.max_totalname_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 256</li>
+</ul>
+<p>Defines the maximum length of the total variable name when registered through the COOKIE. For array variables this includes all indices.</p>
+</div>
+<div class="section" id="suhosin-cookie-max-value-length">
+<h3><a class="toc-backref" href="configuration.html#id70">suhosin.cookie.max_value_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 10000</li>
+</ul>
+<p>Defines the maximum length of a variable that is registered through the COOKIE.</p>
+</div>
+<div class="section" id="suhosin-cookie-max-vars">
+<h3><a class="toc-backref" href="configuration.html#id71">suhosin.cookie.max_vars</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 100</li>
+</ul>
+<p>Defines the maximum number of variables that may be registered through the COOKIE.</p>
+</div>
+<div class="section" id="suhosin-cookie-disallow-nul">
+<h3><a class="toc-backref" href="configuration.html#id72">suhosin.cookie.disallow_nul</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>When set to On ASCIIZ chars are not allowed in variables.</p>
+</div>
+<div class="section" id="suhosin-cookie-disallow-ws">
+<h3><a class="toc-backref" href="configuration.html#id73">suhosin.cookie.disallow_ws</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Ignore cookies with names starting with whitespace.</p>
+</div>
+<div class="section" id="suhosin-get-max-array-depth">
+<h3><a class="toc-backref" href="configuration.html#id74">suhosin.get.max_array_depth</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 50</li>
+</ul>
+<p>Defines the maximum depth an array variable may have, when registered through the URL.</p>
+<p>Note: Array depth is not the number of elements within an array.</p>
+</div>
+<div class="section" id="suhosin-get-max-array-index-length">
+<h3><a class="toc-backref" href="configuration.html#id75">suhosin.get.max_array_index_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of array indices for variables registered through the URL.</p>
+</div>
+<div class="section" id="suhosin-get-max-name-length">
+<h3><a class="toc-backref" href="configuration.html#id76">suhosin.get.max_name_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of variable names for variables registered through the URL. For array variables this is the name in front of the indices.</p>
+</div>
+<div class="section" id="suhosin-get-max-totalname-length">
+<h3><a class="toc-backref" href="configuration.html#id77">suhosin.get.max_totalname_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 256</li>
+</ul>
+<p>Defines the maximum length of the total variable name when registered through the URL. For array variables this includes all indices.</p>
+</div>
+<div class="section" id="suhosin-get-max-value-length">
+<h3><a class="toc-backref" href="configuration.html#id78">suhosin.get.max_value_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 512</li>
+</ul>
+<p>Defines the maximum length of a variable that is registered through the URL.</p>
+</div>
+<div class="section" id="suhosin-get-max-vars">
+<h3><a class="toc-backref" href="configuration.html#id79">suhosin.get.max_vars</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 100</li>
+</ul>
+<p>Defines the maximum number of variables that may be registered through the URL.</p>
+</div>
+<div class="section" id="suhosin-get-disallow-nul">
+<h3><a class="toc-backref" href="configuration.html#id80">suhosin.get.disallow_nul</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>When set to On ASCIIZ chars are not allowed in variables.</p>
+</div>
+<div class="section" id="suhosin-get-disallow-ws">
+<h3><a class="toc-backref" href="configuration.html#id81">suhosin.get.disallow_ws</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Ignore GET parameters with names starting with whitespace.</p>
+</div>
+<div class="section" id="suhosin-post-max-array-depth">
+<h3><a class="toc-backref" href="configuration.html#id82">suhosin.post.max_array_depth</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 50</li>
+</ul>
+<p>Defines the maximum depth an array variable may have, when registered through a POST request.</p>
+<p>Note: Array depth is not the number of elements within an array.</p>
+</div>
+<div class="section" id="suhosin-post-max-array-index-length">
+<h3><a class="toc-backref" href="configuration.html#id83">suhosin.post.max_array_index_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of array indices for variables registered through a POST request.</p>
+</div>
+<div class="section" id="suhosin-post-max-name-length">
+<h3><a class="toc-backref" href="configuration.html#id84">suhosin.post.max_name_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of variable names for variables registered through a POST request. For array variables this is the name in front of the indices.</p>
+</div>
+<div class="section" id="suhosin-post-max-totalname-length">
+<h3><a class="toc-backref" href="configuration.html#id85">suhosin.post.max_totalname_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 256</li>
+</ul>
+<p>Defines the maximum length of the total variable name when registered through a POST request. For array variables this includes all indices.</p>
+</div>
+<div class="section" id="suhosin-post-max-value-length">
+<h3><a class="toc-backref" href="configuration.html#id86">suhosin.post.max_value_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 1000000</li>
+</ul>
+<p>Defines the maximum length of a variable that is registered through a POST request.</p>
+</div>
+<div class="section" id="suhosin-post-max-vars">
+<h3><a class="toc-backref" href="configuration.html#id87">suhosin.post.max_vars</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 1000</li>
+</ul>
+<p>Defines the maximum number of variables that may be registered through a POST request.</p>
+</div>
+<div class="section" id="suhosin-post-disallow-nul">
+<h3><a class="toc-backref" href="configuration.html#id88">suhosin.post.disallow_nul</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>When set to On ASCIIZ chars are not allowed in variables.</p>
+</div>
+<div class="section" id="suhosin-post-disallow-ws">
+<h3><a class="toc-backref" href="configuration.html#id89">suhosin.post.disallow_ws</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Ignore POST parameters with names starting with whitespace.</p>
+</div>
+<div class="section" id="suhosin-request-array-index-blacklist">
+<h3><a class="toc-backref" href="configuration.html#id90">suhosin.request.array_index_blacklist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default: "'"+&lt;&gt;;()"</li>
+</ul>
+<p>Defines a character blacklist for array indices not allowed in user input.</p>
+<p>Note: The default value also contained '-' in 0.9.37, which was removed in 0.9.37.1 due to incompatibility issues.</p>
+</div>
+<div class="section" id="suhosin-request-array-index-whitelist">
+<h3><a class="toc-backref" href="configuration.html#id91">suhosin.request.array_index_whitelist</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+<li>Example: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</li>
+</ul>
+<p>Defines a character whitelist for array indices allowed in user input.</p>
+<p>Note: This setting deactivates suhosin.request.array_index_blacklist.</p>
+</div>
+<div class="section" id="suhosin-request-max-array-depth">
+<h3><a class="toc-backref" href="configuration.html#id92">suhosin.request.max_array_depth</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 50</li>
+</ul>
+<p>Defines the maximum depth an array variable may have, when registered through GET , POST or COOKIE. This setting is also an upper limit for the separate GET, POST, COOKIE configuration directives.</p>
+<p>Note: Array depth is not the number of elements within an array.</p>
+</div>
+<div class="section" id="suhosin-request-max-array-index-length">
+<h3><a class="toc-backref" href="configuration.html#id93">suhosin.request.max_array_index_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum length of array indices for variables registered through GET, POST or COOKIE. This setting is also an upper limit for the separate GET, POST, COOKIE configuration directives.</p>
+</div>
+<div class="section" id="suhosin-request-max-totalname-length">
+<h3><a class="toc-backref" href="configuration.html#id94">suhosin.request.max_totalname_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 256</li>
+</ul>
+<p>Defines the maximum length of variable names for variables registered through the COOKIE, the URL or through a POST request. This is the complete name string, including all indices. This setting is also an upper limit for the separate GET, POST, COOKIE configuration directives.</p>
+</div>
+<div class="section" id="suhosin-request-max-value-length">
+<h3><a class="toc-backref" href="configuration.html#id95">suhosin.request.max_value_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 1000000</li>
+</ul>
+<p>Defines the maximum length of a variable that is registered through the COOKIE, the URL or through a POST request. This setting is also an upper limit for the variable origin specific configuration directives.</p>
+</div>
+<div class="section" id="suhosin-request-max-vars">
+<h3><a class="toc-backref" href="configuration.html#id96">suhosin.request.max_vars</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 1000</li>
+</ul>
+<p>Defines the maximum number of variables that may be registered through the COOKIE, the URL or through a POST request. This setting is also an upper limit for the variable origin specific configuration directives.</p>
+</div>
+<div class="section" id="suhosin-request-max-varname-length">
+<h3><a class="toc-backref" href="configuration.html#id97">suhosin.request.max_varname_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 64</li>
+</ul>
+<p>Defines the maximum name length (excluding possible array indices) of variables that may be registered through the COOKIE, the URL or through a POST request. This setting is also an upper limit for the variable origin specific configuration directives.</p>
+</div>
+<div class="section" id="suhosin-request-disallow-nul">
+<h3><a class="toc-backref" href="configuration.html#id98">suhosin.request.disallow_nul</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>When set to On ASCIIZ chars are not allowed in variables.</p>
+</div>
+<div class="section" id="suhosin-request-disallow-ws">
+<h3><a class="toc-backref" href="configuration.html#id99">suhosin.request.disallow_ws</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Ignore all variables with names starting with whitespace.</p>
+</div>
+<div class="section" id="suhosin-upload-max-uploads">
+<h3><a class="toc-backref" href="configuration.html#id100">suhosin.upload.max_uploads</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 25</li>
+</ul>
+<p>Defines the maximum number of files that may be uploaded with one request.</p>
+</div>
+<div class="section" id="suhosin-upload-max-newlines">
+<h3><a class="toc-backref" href="configuration.html#id101">suhosin.upload.max_newlines</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 100</li>
+</ul>
+<p>Defines the maximum number of newlines in rfc1867 mime headers.
+(added with version 0.9.38)</p>
+</div>
+<div class="section" id="suhosin-upload-disallow-elf">
+<h3><a class="toc-backref" href="configuration.html#id102">suhosin.upload.disallow_elf</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>When set to On it is not possible to upload ELF executables.</p>
+</div>
+<div class="section" id="suhosin-upload-disallow-binary">
+<h3><a class="toc-backref" href="configuration.html#id103">suhosin.upload.disallow_binary</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>When set to On it is not possible to upload binary files.</p>
+</div>
+<div class="section" id="suhosin-upload-remove-binary">
+<h3><a class="toc-backref" href="configuration.html#id104">suhosin.upload.remove_binary</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>When set to On binary content is removed from the uploaded files.</p>
+</div>
+<div class="section" id="suhosin-upload-allow-utf8">
+<h3><a class="toc-backref" href="configuration.html#id105">suhosin.upload.allow_utf8</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>This is an experimental feature. This option allows UTF-8 along with ASCII when using <cite>suhosin.upload.disallow_binary</cite> or <cite>suhosin.upload.remove_binary</cite>.</p>
+</div>
+<div class="section" id="suhosin-upload-verification-script">
+<h3><a class="toc-backref" href="configuration.html#id106">suhosin.upload.verification_script</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>This defines the full path to a verification script for uploaded files. The script gets the temporary filename supplied and has to decide if the upload is allowed. A possible application for this is to scan uploaded files for viruses. The called script has to write a 1 as first line to standard output to allow the upload. Any other value or no output at all will result in the file being deleted.</p>
+</div>
+<div class="section" id="suhosin-session-max-id-length">
+<h3><a class="toc-backref" href="configuration.html#id107">suhosin.session.max_id_length</a></h3>
+<ul class="simple">
+<li>Type: Integer</li>
+<li>Default: 128</li>
+</ul>
+<p>Specifies the maximum length of the session identifier that is allowed. When a longer session identifier is passed a new session identifier will be created. This feature is important to fight buffer overflows in 3rd party session handlers.</p>
+</div>
+<div class="section" id="suhosin-server-encode">
+<h3><a class="toc-backref" href="configuration.html#id108">suhosin.server.encode</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Encode potentially dangerous characters in REQUEST_URI and QUERY_STRING with URL encoding.</p>
+</div>
+<div class="section" id="suhosin-server-strip">
+<h3><a class="toc-backref" href="configuration.html#id109">suhosin.server.strip</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Replace potentially dangerous characters in PHP_SELF, PATH_INFO, PATH_TRANSLATED and HTTP_USER_AGENT with '?'.</p>
+</div>
+<div class="section" id="suhosin-rand-seedingkey">
+<h3><a class="toc-backref" href="configuration.html#id110">suhosin.rand.seedingkey</a></h3>
+<ul class="simple">
+<li>Type: String</li>
+<li>Default:</li>
+</ul>
+<p>This string is added to the entropy pool for seeding the random number generator.</p>
+</div>
+<div class="section" id="suhosin-rand-reseed-every-request">
+<h3><a class="toc-backref" href="configuration.html#id111">suhosin.rand.reseed_every_request</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: Off</li>
+</ul>
+<p>Controls if automatic reseeding of rand() / mt_rand() is done for every new request. Will improve security but decrease performance. In case the system's entry pool is exhausted, this flag may either significantly increase execution time or otherwise use less entropy (which is bad).</p>
+</div>
+<div class="section" id="suhosin-srand-ignore">
+<h3><a class="toc-backref" href="configuration.html#id112">suhosin.srand.ignore</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that controls if calls to srand() are ignored in favour of Suhosin's own enhanced seeding - since 0.9.36 calls will trigger auto-reseeding.</p>
+</div>
+<div class="section" id="suhosin-mt-srand-ignore">
+<h3><a class="toc-backref" href="configuration.html#id113">suhosin.mt_srand.ignore</a></h3>
+<ul class="simple">
+<li>Type: Boolean</li>
+<li>Default: On</li>
+</ul>
+<p>Flag that controls if calls to mt_srand() are ignored in favour of Suhosin's own enhanced seeding - since 0.9.36 calls will trigger auto-reseeding.</p>
+</div>
+</div>
+</div>
+    </div>
+    
+
+</article><!--End of body content--><footer id="footer"><a href="https://sektioneins.de/en/"><img src="../images/s1-logo-transparent-small.png" id="footerimg"></a><div id="footertext">© 2019 <a href="https://sektioneins.de/en/">SektionEins GmbH</a> • <a href="https://sektioneins.de/en/impressum.html">Imprint</a> • <a href="https://sektioneins.de/en/privacy.html">Privacy Statement</a>
+</div>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

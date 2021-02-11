@@ -1,0 +1,55 @@
+body {
+	background-color: #222;
+}
+
+.navbar-inverse {
+	border-color: #f11;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  background-color: #eee;
+}
+
+.body-content {
+	background-color: #fff;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 6px;
+}
+
+footer {
+	margin-top: 10px;
+	background-color: #eee;
+	text-align: right;
+	min-height: 40px;
+}
+
+#footer {
+	padding-top: 0px;
+}
+
+#footerimg {
+	float: left;
+	padding: 5px;
+}
+
+#footertext {
+	vertical-align: middle;
+	float: right;
+	margin-top: 5px;
+	padding: 5px;
+}
+
+.jumbotron1 {
+	margin-top: 20px;
+	margin-bottom: -20px;
+	text-align: left;
+	background-image: url("/images/suhosin-dl-bg.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+#contents {
+	margin-top: -20px;
+}

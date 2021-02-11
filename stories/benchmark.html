@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmark | SUHOSIN</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="canonical" href="https://suhosin.org/stories/benchmark.html">
+<link rel="icon" href="../favicon.png" sizes="32x32">
+<link rel="icon" href="../favicon_256x256.png" sizes="256x256">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="SektionEins">
+<meta property="og:site_name" content="SUHOSIN">
+<meta property="og:title" content="Benchmark">
+<meta property="og:url" content="https://suhosin.org/stories/benchmark.html">
+<meta property="og:description" content="Because Suhosin adds additional security hardening checks all over the PHP code tree there have been questions about their speed impact.
+
+Testsystem
+
+CPU: Intel(R) Pentium(R) 4 CPU 2.80GHz
+RAM: 512 MB">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-06-11T11:02:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://suhosin.org/">
+
+            <span id="blog-title">SUHOSIN</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="download.html" class="nav-link">Download</a>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Documentation</a>
+            <div class="dropdown-menu">
+                    <a href="feature-list.html" class="dropdown-item">Feature List</a>
+                    <a href="install.html" class="dropdown-item">Installing Suhosin</a>
+                    <a href="configuration.html" class="dropdown-item">Configuration</a>
+                    <a href="howtos.html" class="dropdown-item">HOWTOs</a>
+                    <a href="faq.html" class="dropdown-item">FAQ</a>
+                    <a href="#" class="dropdown-item active">Benchmark <span class="sr-only">(active)</span></a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Github</a>
+            <div class="dropdown-menu">
+                    <a href="https://raw.githubusercontent.com/sektioneins/suhosin/master/Changelog" class="dropdown-item">Changelog</a>
+                    <a href="https://github.com/sektioneins/suhosin" class="dropdown-item">Sources</a>
+                    <a href="https://github.com/sektioneins/suhosin/issues" class="dropdown-item">Bugtracker</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SektionEins</a>
+            <div class="dropdown-menu">
+                    <a href="https://sektioneins.de/en/index.html#services" class="dropdown-item">Security Audits</a>
+                    <a href="https://sektioneins.de/en/index.html#news" class="dropdown-item">News</a>
+                    <a href="https://sektioneins.de/en/kontakt.html" class="dropdown-item">Contact</a>
+            </div>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Benchmark</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Because Suhosin adds additional security hardening checks all over the PHP code tree there have been questions about their speed impact.</p>
+<div class="section" id="testsystem">
+<h2>Testsystem</h2>
+<ul class="simple">
+<li>CPU: Intel(R) Pentium(R) 4 CPU 2.80GHz</li>
+<li>RAM: 512 MB</li>
+<li>PHP 5.1.5</li>
+<li>Suhosin-Patch 0.9.0 - BETA in default configuration</li>
+<li>Suhosin-Extension 0.9.0 - BETA in default configuration</li>
+</ul>
+</div>
+<div class="section" id="benchmark-bench-php">
+<h2>Benchmark: bench.php</h2>
+<p>The Zend engine comes with a little benchmark script called <a class="reference external" href="https://github.com/php/php-src/blob/master/Zend/bench.php">bench.php</a> that was used to retrieve the following numbers. When looking at the numbers, keep in mind, that this kind of benchmark does not show the real speed impact on PHP web-applications.</p>
+<table border="1" class="docutils">
+<tr>
+<th class="leftalign"> Test            </th>
+<th> Plain </th>
+<th> Plain + EXT </th>
+<th> Patched </th>
+<th> Patched + EXT </th>
+        </tr>
+<tr>
+<td class="leftalign"> simple          </td>
+<td class="rightalign">  0.385 </td>
+<td class="rightalign">  0.387 </td>
+<td class="rightalign">  0.392 </td>
+<td class="rightalign">  0.380 </td>
+        </tr>
+<tr>
+<td class="leftalign"> simplecall      </td>
+<td class="rightalign">  0.581 </td>
+<td class="rightalign">  0.623 </td>
+<td class="rightalign">  0.589 </td>
+<td class="rightalign">  0.700 </td>
+        </tr>
+<tr>
+<td class="leftalign"> simpleucall     </td>
+<td class="rightalign">  0.861 </td>
+<td class="rightalign">  0.863 </td>
+<td class="rightalign">  0.874 </td>
+<td class="rightalign">  1.012 </td>
+        </tr>
+<tr>
+<td class="leftalign"> simpleudcall    </td>
+<td class="rightalign">  1.007 </td>
+<td class="rightalign">  0.995 </td>
+<td class="rightalign">  1.035 </td>
+<td class="rightalign">  1.230 </td>
+        </tr>
+<tr>
+<td class="leftalign"> mandel          </td>
+<td class="rightalign">  1.228 </td>
+<td class="rightalign">  1.175 </td>
+<td class="rightalign">  1.223 </td>
+<td class="rightalign">  1.109 </td>
+        </tr>
+<tr>
+<td class="leftalign"> mandel2         </td>
+<td class="rightalign">  1.464 </td>
+<td class="rightalign">  1.471 </td>
+<td class="rightalign">  1.543 </td>
+<td class="rightalign">  1.501 </td>
+        </tr>
+<tr>
+<td class="leftalign"> ackermann(7)    </td>
+<td class="rightalign">  1.110 </td>
+<td class="rightalign">  1.157 </td>
+<td class="rightalign">  1.195 </td>
+<td class="rightalign">  1.268 </td>
+        </tr>
+<tr>
+<td class="leftalign"> ary(50000)      </td>
+<td class="rightalign">  0.097 </td>
+<td class="rightalign">  0.097 </td>
+<td class="rightalign">  0.104 </td>
+<td class="rightalign">  0.103 </td>
+        </tr>
+<tr>
+<td class="leftalign"> ary2(50000)     </td>
+<td class="rightalign">  0.087 </td>
+<td class="rightalign">  0.087 </td>
+<td class="rightalign">  0.107 </td>
+<td class="rightalign">  0.106 </td>
+        </tr>
+<tr>
+<td class="leftalign"> ary3(2000)      </td>
+<td class="rightalign">  0.715 </td>
+<td class="rightalign">  0.728 </td>
+<td class="rightalign">  1.037 </td>
+<td class="rightalign">  0.788 </td>
+        </tr>
+<tr>
+<td class="leftalign"> fibo(30)        </td>
+<td class="rightalign">  2.463 </td>
+<td class="rightalign">  2.571 </td>
+<td class="rightalign">  2.518 </td>
+<td class="rightalign">  2.846 </td>
+        </tr>
+<tr>
+<td class="leftalign"> hash1(50000)    </td>
+<td class="rightalign">  0.154 </td>
+<td class="rightalign">  0.161 </td>
+<td class="rightalign">  0.146 </td>
+<td class="rightalign">  0.162 </td>
+        </tr>
+<tr>
+<td class="leftalign"> hash2(500)      </td>
+<td class="rightalign">  0.132 </td>
+<td class="rightalign">  0.130 </td>
+<td class="rightalign">  0.127 </td>
+<td class="rightalign">  0.129 </td>
+        </tr>
+<tr>
+<td> heapsort(20000) </td>
+<td class="rightalign">  0.396 </td>
+<td class="rightalign">  0.391 </td>
+<td class="rightalign">  0.402 </td>
+<td class="rightalign">  0.398 </td>
+        </tr>
+<tr>
+<td class="leftalign"> matrix(20)      </td>
+<td class="rightalign">  0.323 </td>
+<td class="rightalign">  0.322 </td>
+<td class="rightalign">  0.329 </td>
+<td class="rightalign">  0.332 </td>
+        </tr>
+<tr>
+<td class="leftalign"> nestedloop(12)  </td>
+<td class="rightalign">  0.652 </td>
+<td class="rightalign">  0.659 </td>
+<td class="rightalign">  0.646 </td>
+<td class="rightalign">  0.650 </td>
+        </tr>
+<tr>
+<td class="leftalign"> sieve(30)       </td>
+<td class="rightalign">  0.489 </td>
+<td class="rightalign">  0.495 </td>
+<td class="rightalign">  0.539 </td>
+<td class="rightalign">  0.531 </td>
+        </tr>
+<tr>
+<td class="leftalign"> strcat(200000)  </td>
+<td class="rightalign">  0.096 </td>
+<td class="rightalign">  0.080 </td>
+<td class="rightalign">  0.077 </td>
+<td class="rightalign">  0.075 </td>
+        </tr>
+<tr>
+<th class="leftalign"> Total           </th>
+<th class="rightalign">  12.239 </th>
+<th class="rightalign">  12.391 </th>
+<th class="rightalign">  12.882 </th>
+<th class="rightalign">  13.322 </th>
+        </tr>
+</table>
+<p>The resulttable means, that PHP with Suhosin-Patch and the Extension is 8.84% slower in the overall benchmark. However this test shows that the greates speed impact of the protection is in the tests that use alot of recursive function calls. In real world web applications it is unlikely that you have several million of function calls, therefore the speed impact will be lower than 8.84%.</p>
+</div>
+</div>
+    </div>
+    
+
+</article><!--End of body content--><footer id="footer"><a href="https://sektioneins.de/en/"><img src="../images/s1-logo-transparent-small.png" id="footerimg"></a><div id="footertext">© 2019 <a href="https://sektioneins.de/en/">SektionEins GmbH</a> • <a href="https://sektioneins.de/en/impressum.html">Imprint</a> • <a href="https://sektioneins.de/en/privacy.html">Privacy Statement</a>
+</div>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

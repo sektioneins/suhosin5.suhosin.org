@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installing Suhosin | SUHOSIN</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="canonical" href="https://suhosin.org/stories/install.html">
+<link rel="icon" href="../favicon.png" sizes="32x32">
+<link rel="icon" href="../favicon_256x256.png" sizes="256x256">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="SektionEins">
+<meta property="og:site_name" content="SUHOSIN">
+<meta property="og:title" content="Installing Suhosin">
+<meta property="og:url" content="https://suhosin.org/stories/install.html">
+<meta property="og:description" content="Contents
+
+Introduction
+Suhosin Extension
+Manual Installation
+Installing on Debian and Ubuntu
+Installing on Gentoo
+Installing on FreeBSD
+
+
+Suhosin-Patch
+Step 1: Installing the Hardened-PHP Project Sign">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-06-11T11:02:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://suhosin.org/">
+
+            <span id="blog-title">SUHOSIN</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="download.html" class="nav-link">Download</a>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Documentation</a>
+            <div class="dropdown-menu">
+                    <a href="feature-list.html" class="dropdown-item">Feature List</a>
+                    <a href="#" class="dropdown-item active">Installing Suhosin <span class="sr-only">(active)</span></a>
+                    <a href="configuration.html" class="dropdown-item">Configuration</a>
+                    <a href="howtos.html" class="dropdown-item">HOWTOs</a>
+                    <a href="faq.html" class="dropdown-item">FAQ</a>
+                    <a href="benchmark.html" class="dropdown-item">Benchmark</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Github</a>
+            <div class="dropdown-menu">
+                    <a href="https://raw.githubusercontent.com/sektioneins/suhosin/master/Changelog" class="dropdown-item">Changelog</a>
+                    <a href="https://github.com/sektioneins/suhosin" class="dropdown-item">Sources</a>
+                    <a href="https://github.com/sektioneins/suhosin/issues" class="dropdown-item">Bugtracker</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SektionEins</a>
+            <div class="dropdown-menu">
+                    <a href="https://sektioneins.de/en/index.html#services" class="dropdown-item">Security Audits</a>
+                    <a href="https://sektioneins.de/en/index.html#news" class="dropdown-item">News</a>
+                    <a href="https://sektioneins.de/en/kontakt.html" class="dropdown-item">Contact</a>
+            </div>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Installing Suhosin</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="install.html#introduction" id="id1">Introduction</a></li>
+<li>
+<a class="reference internal" href="install.html#suhosin-extension" id="id2">Suhosin Extension</a><ul>
+<li><a class="reference internal" href="install.html#manual-installation" id="id3">Manual Installation</a></li>
+<li><a class="reference internal" href="install.html#installing-on-debian-and-ubuntu" id="id4">Installing on Debian and Ubuntu</a></li>
+<li><a class="reference internal" href="install.html#installing-on-gentoo" id="id5">Installing on Gentoo</a></li>
+<li><a class="reference internal" href="install.html#installing-on-freebsd" id="id6">Installing on FreeBSD</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="install.html#suhosin-patch" id="id7">Suhosin-Patch</a><ul>
+<li><a class="reference internal" href="install.html#step-1-installing-the-hardened-php-project-signaturekey" id="id8">Step 1: Installing the Hardened-PHP Project Signaturekey</a></li>
+<li><a class="reference internal" href="install.html#step-2-downloading-and-verifying-the-necessary-files" id="id9">Step 2: Downloading and verifying the necessary files</a></li>
+<li><a class="reference internal" href="install.html#installing-on-a-generic-linux-unix" id="id10">Installing on a Generic Linux/Unix</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="install.html#upgrading" id="id11">Upgrading</a></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2><a class="toc-backref" href="install.html#id1">Introduction</a></h2>
+<p>Suhosin comes with two parts - the extension and the patch. Both parts can be installed separately and have no dependencies to each other.</p>
+</div>
+<div class="section" id="suhosin-extension">
+<h2><a class="toc-backref" href="install.html#id2">Suhosin Extension</a></h2>
+<p>Compatibility: The current Suhosin-Extension has been tested with PHP 5.4, 5.5 and 5.6.</p>
+<div class="section" id="manual-installation">
+<h3><a class="toc-backref" href="install.html#id3">Manual Installation</a></h3>
+<p>Unlike the Hardening-Patch for PHP, nearly all of Suhosin's features are within the extension. Therefore you might want to only install the extension and use a plain unpatched PHP. Depending on the system we might already offer binary packages. You can check our <a class="reference external" href="download.html">Suhosin Download</a> page. In that case you only need to activate the extension inside your php.ini and maybe add Configuration directives if you are not satisfied by the default values.</p>
+<p>Before you continue compiling the Suhosin-Extension you should verify the file integrity with GnuPG or download the latest source from Github via HTTPS. The next step is unpacking the extension tarball and performing the usual compilation steps for PHP extensions.</p>
+<p>Quickstart (probably suitable for most people):</p>
+<pre class="literal-block">
+#&gt; cd suhosin
+#&gt; phpize
+#&gt; ./configure
+#&gt; make
+#&gt; make install
+</pre>
+<p>This should install suhosin.so in the correct extension directory. The final step is adding a load directive to php.ini</p>
+<pre class="literal-block">
+extension=suhosin.so
+</pre>
+<p>and optionally add some configuration directives in case you do not like the default values.</p>
+<p>More elaborate configuration (for advanced users with several PHP installations):</p>
+<ul>
+<li>
+<p class="first"><tt class="docutils literal">#&gt; phpize</tt> should be the <tt class="docutils literal">phpize</tt> from your target PHP installation - in case you have more than one PHP installed. So this may actually be something like</p>
+<pre class="literal-block">
+#&gt; /opt/php-5.6.2/bin/phpize
+</pre>
+</li>
+<li>
+<p class="first">Point to the correct <tt class="docutils literal"><span class="pre">php-config</span></tt>! If either <tt class="docutils literal">phpize</tt> or <tt class="docutils literal"><span class="pre">php-config</span></tt> does not belong to your target PHP, you may encounter strange errors such as <tt class="docutils literal">undefined symbol compiler_globals</tt>.</p>
+<pre class="literal-block">
+#&gt; ./configure --with-php-config=/opt/php-5.6.2/bin/php-config
+</pre>
+</li>
+<li>
+<p class="first">CFLAGS: these may be added to <tt class="docutils literal">configure</tt> as well. e.g.</p>
+<pre class="literal-block">
+#&gt; configure CFLAGS="-arch x86_64
+</pre>
+</li>
+<li>
+<p class="first">Some experimental features can be enabled using</p>
+<pre class="literal-block">
+#&gt; configure --enable-suhosin-experimental
+</pre>
+</li>
+<li>
+<p class="first"><tt class="docutils literal">#&gt; make <span class="pre">-j2</span></tt> - for speed. Add CFLAGS here too as needed, e.g. <tt class="docutils literal">make <span class="pre">-j2</span> <span class="pre">CFLAGS="..."</span></tt></p>
+</li>
+<li>
+<p class="first"><tt class="docutils literal">#&gt; make install</tt> or just copy suhosin.so to your <tt class="docutils literal">extension_dir</tt>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-on-debian-and-ubuntu">
+<h3><a class="toc-backref" href="install.html#id4">Installing on Debian and Ubuntu</a></h3>
+<ul>
+<li>
+<p class="first"><strong>Option 1</strong>: Compile a .deb package yourself: (replace version number as appropriate)</p>
+<pre class="literal-block">
+suhosin/pkg $ ./build_deb.sh 0.9.37-1~custom1
+</pre>
+</li>
+<li>
+<p class="first"><strong>Option 2</strong>: We provide precompiled packages of Suhosin's bleeding edge - yet stable enough - development version for Debian (wheezy and jessie / amd64, i386, armhf) and Ubuntu (stable / amd64). <em>Note</em>: This service is free of charge and comes without any warranty. These packages are not recommended for production. Also, please note that Suhosin was compiled depending on stock PHP5 packages; users of custom PHP repositories such as dotdeb should use Option 1.</p>
+<pre class="literal-block">
+## /etc/apt/sources.list for Debian jessie (stable) (amd64, i386, armhf)
+deb http://repo.suhosin.org/ debian-jessie main
+
+## /etc/apt/sources.list for Debian wheezy (old stable) (amd64, i386, armhf)
+deb http://repo.suhosin.org/ debian-wheezy main
+
+## /etc/apt/sources.list for Ubuntu trusty (amd64 only)
+deb http://repo.suhosin.org/ ubuntu-trusty main
+</pre>
+<p>Then <em>apt-get install php5-suhosin-extension</em>.</p>
+<p>The repository is signed with our archive key <a class="reference external" href="https://sektioneins.de/files/repository.asc">0xB12D0447319F1ADB</a>.</p>
+<pre class="literal-block">
+$ wget https://sektioneins.de/files/repository.asc
+$ sudo apt-key add repository.asc
+</pre>
+</li>
+<li>
+<p class="first"><strong>Option 3</strong>: Debian provides official Suhosin packages for some Versions, e.g. sid, named <em>php5-suhosin</em>. These are ok as well, but most likely not the latest version. Suhosin is in constant development to keep up to date with modern web attacks. If possible, use Option 1 or 2 instead.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-on-gentoo">
+<h3><a class="toc-backref" href="install.html#id5">Installing on Gentoo</a></h3>
+<p>Installing and using Suhosin on Gentoo is very easy. At the moment the Suhosin patches and extensions are only available in the external PHP Overlay, and not yet in the Portage tree, you can expect them to also be available in the main Portage tree during October 2006. Let’s install the PHP Overlay then:</p>
+<pre class="literal-block">
+#&gt; emerge layman
+#&gt; layman -f
+#&gt; layman -a php-testing
+</pre>
+<p>Now let’s install PHP with the Suhosin patch and extension:</p>
+<pre class="literal-block">
+#&gt; echo "dev-lang/php" &gt;&gt; /etc/portage/package.keywords
+(unstable version needed)
+#&gt; USE="suhosin" emerge =php-4* for PHP4, or =php-5* for PHP5
+</pre>
+<p>(NOTE: you cannot also have the "hardenedphp" USE flag enabled at the same time!)
+That’s it, your PHP on Gentoo is now running with the Suhosin patch enabled, and the Suhosin extension was automatically installed (from the dev-php{4,5}/suhosin package).</p>
+</div>
+<div class="section" id="installing-on-freebsd">
+<h3><a class="toc-backref" href="install.html#id6">Installing on FreeBSD</a></h3>
+<p>The Suhosin-Patch and the Suhosin extension are both within the FreeBSD ports. Therefore installing it on FreeBSD is very simple. The Suhosin-Patch is an option which you can choose when you install the lang/php4 or lang/php5 port. To install the patch just do</p>
+<pre class="literal-block">
+#&gt; cd /usr/ports/lang/php5
+#&gt; make
+... now select the menu item that says: Enable Suhosin Protection
+#&gt; make install
+</pre>
+<p>To install the extension just do</p>
+<pre class="literal-block">
+#&gt; cd /usr/ports/security/php-suhosin
+#&gt; make
+#&gt; make install
+</pre>
+<p>After these simple steps Suhosin-Patch is successfully installed on your system.</p>
+</div>
+</div>
+<div class="section" id="suhosin-patch">
+<h2><a class="toc-backref" href="install.html#id7">Suhosin-Patch</a></h2>
+<p><strong>Note:</strong> The Suhosin-Patch is compatible only up to PHP version <strong>5.3.9</strong>. You can, however, run the Suhosin-Extension without the Suhosin-Patch with current version of PHP5.</p>
+<p>When you want to install PHP with the Suhosin-Patch you have to perform some preparation steps first.</p>
+<div class="section" id="step-1-installing-the-hardened-php-project-signaturekey">
+<h3><a class="toc-backref" href="install.html#id8">Step 1: Installing the Hardened-PHP Project Signaturekey</a></h3>
+<p>You should first grab a copy of the Hardened-PHP Project's Release Signaturekey and import it into your GNU Privacy Guard keychain. (For further information on the usage of gnupg please consult it’s manpage)</p>
+<pre class="literal-block">
+#&gt; gpg --import &lt; hardened-php-signature-key.asc
+gpg: /root/.gnupg/trustdb.gpg: trust-db erzeugt
+gpg: key 0A864AA1: public key "Hardened-PHP Signature Key" imported
+gpg: Anzahl insgesamt bearbeiteter Schlüssel: 1
+gpg:                              importiert: 1
+</pre>
+</div>
+<div class="section" id="step-2-downloading-and-verifying-the-necessary-files">
+<h3><a class="toc-backref" href="install.html#id9">Step 2: Downloading and verifying the necessary files</a></h3>
+<p>It is now time to grab a copy of a fresh PHP tarball and the latest version of the Suhosin-Patch. Additionally you should get the digital signature (*.sig) files. You can grab all of this on our suhosin download page.</p>
+<p>As a first precaution you can check the MD5 hashs of the downloaded files against those you find on the download page.</p>
+<pre class="literal-block">
+#&gt; md5sum php-5.1.4.tar.bz2
+66a806161d4a2d3b5153ebe4cd0f2e1c  php-5.1.4.tar.bz2
+#&gt; md5sum suhosin-patch-5.1.4-0.9.0.patch.gz
+ea9026495c4ce34a329fd0a87474f1ba  suhosin-patch-5.1.4-0.9.0.patch.gz
+</pre>
+<p>When the MD5 hash values are valid you can check the digital signatures like this.</p>
+<pre class="literal-block">
+#&gt; gpg php-5.1.4.tar.bz2.sig
+gpg: Signature made Di 16 Mai 2006 23:39:04 CEST using DSA key ID 0A864AA1
+gpg: Good signature from "Hardened-PHP Signature Key"
+#&gt; gpg suhosin-patch-5.1.4-0.9.0.patch.gz.sig
+gpg: Signature made So 21 August 2006 20:02:53 CEST using DSA key ID 0A864AA1
+gpg: Good signature from "Hardened-PHP Signature Key"
+Step 3: Unpacking and Patching
+</pre>
+<p>You now have to unpack the PHP tarball, gunzip the patchfile and then apply the patch.</p>
+<pre class="literal-block">
+#&gt; tar -xfj php-5.1.4.tar.bz2
+#&gt; gunzip suhosin-patch-5.1.4-0.9.0.patch.gz
+#&gt; cd php-5.1.4
+#&gt; patch -p 1 -i ../suhosin-patch-5.1.4-0.9.0.patch
+</pre>
+<p>If you prefer to have suhosin as builtin extension you can also download the suhosin extension source code and copy the src files into the ext/suhosin directory within your PHP source tree.</p>
+</div>
+<div class="section" id="installing-on-a-generic-linux-unix">
+<h3><a class="toc-backref" href="install.html#id10">Installing on a Generic Linux/Unix</a></h3>
+<p>After having prepared the PHP source tree the next step is not much different from the usual installation of PHP. If you have copied the suhosin extension into the ext directory you also have to activate it.</p>
+<pre class="literal-block">
+#&gt; [./buildconf - in case you want to compile suhosin statically]
+#&gt; ./configure --with-whatever-you-want [--enable-suhosin]
+#&gt; make
+#&gt; make test
+#&gt; make install
+</pre>
+<p>By executing make test you can verify, that PHP still works and does not break anything.</p>
+<p>If you are upgrading from a previous installation of PHP you do not need to recompile all installed PHP modules and extensions unless you are upgrading to a PHP version that breaks binary compatibility. However recompiling the extensions after having installed PHP with the Suhosin-Patch can protect them from possible format string vulnerabilities, which was built into the header files.</p>
+<p>After having recompiled and installed everything, have a look at the bundled php.ini files for examples how to use the new configuration directives. For a documentation of the new directives consult the Configuration section.</p>
+<p>Binary extensions from for example Zend should continue flawlessly. If you encounter any problem contact us immediately.</p>
+</div>
+</div>
+<div class="section" id="upgrading">
+<h2><a class="toc-backref" href="install.html#id11">Upgrading</a></h2>
+<p>Upgrading to a new PHP or new Suhosin-Patch version is quite identical to the normal installation process. This is like upgrading a normal PHP. That means, if the binary compatibility was broken between PHP versions you have to recompile all installed PHP modules/extension. Upgrading the Suhosin-Extension on the other hand is as simple as recompiling it (or using a binary), replacing the file and restarting your webserver.</p>
+</div>
+</div>
+    </div>
+    
+
+</article><!--End of body content--><footer id="footer"><a href="https://sektioneins.de/en/"><img src="../images/s1-logo-transparent-small.png" id="footerimg"></a><div id="footertext">© 2019 <a href="https://sektioneins.de/en/">SektionEins GmbH</a> • <a href="https://sektioneins.de/en/impressum.html">Imprint</a> • <a href="https://sektioneins.de/en/privacy.html">Privacy Statement</a>
+</div>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

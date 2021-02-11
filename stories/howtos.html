@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suhosin HOWTOs | SUHOSIN</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="canonical" href="https://suhosin.org/stories/howtos.html">
+<link rel="icon" href="../favicon.png" sizes="32x32">
+<link rel="icon" href="../favicon_256x256.png" sizes="256x256">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="SektionEins">
+<meta property="og:site_name" content="SUHOSIN">
+<meta property="og:title" content="Suhosin HOWTOs">
+<meta property="og:url" content="https://suhosin.org/stories/howtos.html">
+<meta property="og:description" content="Contents
+
+Compile for debugging and development
+Linux and most other platforms
+MacOSX 32bit or 64bit
+
+
+Encryption Features
+Session Encryption
+Cookie Encryption
+
+
+Blocking Functions
+Whitelist vs blackl">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-11-15T11:23:00+01:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://suhosin.org/">
+
+            <span id="blog-title">SUHOSIN</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="download.html" class="nav-link">Download</a>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Documentation</a>
+            <div class="dropdown-menu">
+                    <a href="feature-list.html" class="dropdown-item">Feature List</a>
+                    <a href="install.html" class="dropdown-item">Installing Suhosin</a>
+                    <a href="configuration.html" class="dropdown-item">Configuration</a>
+                    <a href="#" class="dropdown-item active">HOWTOs <span class="sr-only">(active)</span></a>
+                    <a href="faq.html" class="dropdown-item">FAQ</a>
+                    <a href="benchmark.html" class="dropdown-item">Benchmark</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Github</a>
+            <div class="dropdown-menu">
+                    <a href="https://raw.githubusercontent.com/sektioneins/suhosin/master/Changelog" class="dropdown-item">Changelog</a>
+                    <a href="https://github.com/sektioneins/suhosin" class="dropdown-item">Sources</a>
+                    <a href="https://github.com/sektioneins/suhosin/issues" class="dropdown-item">Bugtracker</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SektionEins</a>
+            <div class="dropdown-menu">
+                    <a href="https://sektioneins.de/en/index.html#services" class="dropdown-item">Security Audits</a>
+                    <a href="https://sektioneins.de/en/index.html#news" class="dropdown-item">News</a>
+                    <a href="https://sektioneins.de/en/kontakt.html" class="dropdown-item">Contact</a>
+            </div>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Suhosin HOWTOs</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<div class="contents alert alert-success pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="howtos.html#compile-for-debugging-and-development" id="id1">Compile for debugging and development</a><ul>
+<li><a class="reference internal" href="howtos.html#linux-and-most-other-platforms" id="id2">Linux and most other platforms</a></li>
+<li><a class="reference internal" href="howtos.html#macosx-32bit-or-64bit" id="id3">MacOSX 32bit or 64bit</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="howtos.html#encryption-features" id="id4">Encryption Features</a><ul>
+<li><a class="reference internal" href="howtos.html#session-encryption" id="id5">Session Encryption</a></li>
+<li><a class="reference internal" href="howtos.html#cookie-encryption" id="id6">Cookie Encryption</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="howtos.html#blocking-functions" id="id7">Blocking Functions</a><ul>
+<li><a class="reference internal" href="howtos.html#whitelist-vs-blacklist" id="id8">Whitelist vs blacklist</a></li>
+<li><a class="reference internal" href="howtos.html#finding-out-which-functions-to-allow" id="id9">Finding out which functions to allow</a></li>
+<li><a class="reference internal" href="howtos.html#eval-and-other-language-constructs" id="id10">eval() and other language constructs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="howtos.html#even-more" id="id11">Even more</a></li>
+</ul>
+</div>
+<style>
+h3 {
+        font-size: 18px;
+        margin-top: 20px;
+        margin-botton: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+}
+</style>
+<div class="section" id="compile-for-debugging-and-development">
+<h2><a class="toc-backref" href="howtos.html#id1">Compile for debugging and development</a></h2>
+<p>How to compile the Suhosin extension for debugging and development purposes.</p>
+<div class="section" id="linux-and-most-other-platforms">
+<h3><a class="toc-backref" href="howtos.html#id2">Linux and most other platforms</a></h3>
+<ul>
+<li>
+<p class="first">clean it all up from previous builds</p>
+<pre class="literal-block">
+$ make distclean
+</pre>
+</li>
+<li>
+<p class="first">rebuild <tt class="docutils literal">configure</tt> for your particular PHP version</p>
+<pre class="literal-block">
+$ /opt/php/5.6.3/bin/phpize
+</pre>
+</li>
+<li>
+<p class="first">run <tt class="docutils literal">configure</tt> with experimental option</p>
+<pre class="literal-block">
+$ ./configure --with-php-config=/opt/php/5.6.3/bin/php-config --enable-suhosin-experimental
+</pre>
+</li>
+<li>
+<p class="first">compile with debug option</p>
+<pre class="literal-block">
+$ make -j2 CFLAGS="-DSUHOSIN_DEBUG=1"
+</pre>
+</li>
+<li>
+<p class="first">testing...</p>
+<pre class="literal-block">
+$ make test NO_INTERACTION=1 TESTS=tests/
+</pre>
+</li>
+<li>
+<p class="first">run custom scripts without installation:</p>
+<pre class="literal-block">
+$ /opt/php/5.6.3/bin/php -d extension=./suhosin/modules/suhosin.so foo.php
+$ /opt/php/5.6.3/bin/php -d extension=./suhosin/modules/suhosin.so -r 'phpinfo();'
+</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="macosx-32bit-or-64bit">
+<h3><a class="toc-backref" href="howtos.html#id3">MacOSX 32bit or 64bit</a></h3>
+<p>Compilation works just fine as describes above. But you can specify the target architecture, too.</p>
+<p>Just add <tt class="docutils literal"><span class="pre">CFLAGS="-arch</span> x86_64"</tt> or <tt class="docutils literal"><span class="pre">CFLAGS="-arch</span> i386"</tt> where appropriate:</p>
+<pre class="literal-block">
+$ make distclean
+$ /opt/php/5.6.3/bin/phpize
+$ ./configure --with-php-config=/opt/php/5.6.3/bin/php-config --enable-suhosin-experimental CFLAGS="-arch x86_64"
+$ make -j2 CFLAGS="-DSUHOSIN_DEBUG=1 -arch x86_64"
+</pre>
+</div>
+</div>
+<div class="section" id="encryption-features">
+<h2><a class="toc-backref" href="howtos.html#id4">Encryption Features</a></h2>
+<div class="section" id="session-encryption">
+<h3><a class="toc-backref" href="howtos.html#id5">Session Encryption</a></h3>
+<p>Session data - usually held in <tt class="docutils literal">$_SESSION</tt> - can be encrypted transparently on the server. This is done by encrypting the data just before storage and decrypting upon restoring <tt class="docutils literal">$_SESSION</tt>. That way storage handlers, e.g. for Memcache or database session storage, will only ever handle encrypted data.</p>
+<p>This feature is enabled by default, but needs custom configuration. You should set a custom cryptkey. Example php.ini:</p>
+<pre class="code ini"><a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-1"></a><span class="na">suhosin.session.encrypt</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-2"></a>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-3"></a><span class="c1">;; the cryptkey should be generated, e.g. with 'apg -m 32'</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-4"></a><span class="na">suhosin.session.cryptkey</span> <span class="o">=</span> <span class="s">zuHywawAthLavJohyRilvyecyondOdjo</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-5"></a><span class="na">suhosin.session.cryptua</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-6"></a><span class="na">suhosin.session.cryptdocroot</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-7"></a>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-8"></a><span class="c1">;; IPv4 only</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-9"></a><span class="na">suhosin.session.cryptraddr</span> <span class="o">=</span> <span class="s">0</span>
+<a name="rest_code_ff205d39ba47456d9f8bffd302f623ef-10"></a><span class="na">suhosin.session.checkraddr</span> <span class="o">=</span> <span class="s">0</span>
+</pre>
+</div>
+<div class="section" id="cookie-encryption">
+<h3><a class="toc-backref" href="howtos.html#id6">Cookie Encryption</a></h3>
+<p>Cookie values can be encrypted transparently. Cookies are stored within the client's web browser and are transferred with the HTTP header. By encrypting cookies, you may protect your application against numerous attacks, such as</p>
+<ul class="simple">
+<li>cookie tampering: An attacker may try to guess other reasonable cookie values to attack the application.</li>
+<li>inter-application cookie usage: Incorrectly configured applications may have the same session storage, e.g. sessions all stored in /tmp. A cookie from one application can never be reused for another application as long as the encryption key differs.</li>
+<li>knowing what exactly is stored in the cookie</li>
+</ul>
+<p>However:</p>
+<ul class="simple">
+<li>Cookies are still stored on the client and should not be trusted unchecked in any case.</li>
+<li>Even with encryption, please <strong>do not store secret data in cookies</strong>, e.g. passwords.</li>
+<li>An attacker may try to reuse an old cookie.</li>
+<li>The cookie size is slightly bigger with encryption than without encryption. Some applications make use of huge cookies in the first place and may not work correctly if the encrypted cookie is too big for the web browser.</li>
+</ul>
+<p>This feature is disabled by default.</p>
+<p>You can specify which cookies to encrypt (cryptlist) or which to exempt (plainlist).
+<strong>Note:</strong> Cookies handled on client side with JavaScript as well as on server side should not be encrypted, e.g. listed in suhosin.cookie.plainlist or omitted in suhosin.cookie.cryptlist.</p>
+<p>Example php.ini:</p>
+<pre class="code ini"><a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-1"></a><span class="na">suhosin.cookie.encrypt</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-2"></a>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-3"></a><span class="c1">;; the cryptkey should be generated, e.g. with 'apg -m 32'</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-4"></a><span class="na">suhosin.cookie.cryptkey</span> <span class="o">=</span> <span class="s">oykBicmyitApmireipsacsumhylWaps1</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-5"></a><span class="na">suhosin.cookie.cryptua</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-6"></a><span class="na">suhosin.cookie.cryptdocroot</span> <span class="o">=</span> <span class="s">On</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-7"></a>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-8"></a><span class="c1">;; whitelist/blacklist (use only one)</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-9"></a><span class="c1">;suhosin.cookie.cryptlist = WALLET,IDEAS</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-10"></a><span class="na">suhosin.cookie.plainlist</span> <span class="o">=</span> <span class="s">LANGUAGE</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-11"></a>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-12"></a><span class="c1">;; IPv4 only</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-13"></a><span class="na">suhosin.cookie.cryptraddr</span> <span class="o">=</span> <span class="s">0</span>
+<a name="rest_code_aba78ba18934460a9dbd19d0a567c6d3-14"></a><span class="na">suhosin.cookie.checkraddr</span> <span class="o">=</span> <span class="s">0</span>
+</pre>
+</div>
+</div>
+<div class="section" id="blocking-functions">
+<h2><a class="toc-backref" href="howtos.html#id7">Blocking Functions</a></h2>
+<div class="section" id="whitelist-vs-blacklist">
+<h3><a class="toc-backref" href="howtos.html#id8">Whitelist vs blacklist</a></h3>
+<p>Throughout Suhosin whitelisting and blacklisting are mutually exclusive - you either use a whitelist for a feature or a blacklist. If both happen to be defined, the whitelist takes precedence and the blacklist is ignored.</p>
+<div class="section" id="whitelisting">
+<h4>Whitelisting</h4>
+<p>So, let's explicitly <em>allow</em> a bunch of functions and disable the rest.</p>
+<pre class="code ini"><a name="rest_code_be6a04ad99d5422cb8935f7c9fb0b2b6-1"></a><span class="na">suhosin.executor.func.whitelist</span> <span class="o">=</span> <span class="s">htmlentities,htmlspecialchars,base64_encode</span>
+<a name="rest_code_be6a04ad99d5422cb8935f7c9fb0b2b6-2"></a><span class="na">suhosin.executor.eval.whitelist</span> <span class="o">=</span> <span class="s">htmlentities</span>
+</pre>
+<p>This will allow the following code to be executed - the eval whitelist corresponds to the <tt class="docutils literal">eval()</tt> call:</p>
+<pre class="code php"><a name="rest_code_0baf4638014f4c4c9acc2bfb7e757def-1"></a><span class="cp">&lt;?php</span>
+<a name="rest_code_0baf4638014f4c4c9acc2bfb7e757def-2"></a><span class="k">echo</span> <span class="nb">htmlspecialchars</span><span class="p">(</span><span class="s1">'&lt;test&gt;'</span><span class="p">);</span>
+<a name="rest_code_0baf4638014f4c4c9acc2bfb7e757def-3"></a><span class="k">eval</span><span class="p">(</span><span class="s1">'echo htmlentities("&lt;test&gt;");'</span><span class="p">);</span>
+</pre>
+<p><strong>Note:</strong> The function whitelist (or blacklist) always takes precedence over the eval whitelist (or blacklist). E.g. it would not have been possible to eval htmlspecialchars() in this example.</p>
+</div>
+<div class="section" id="blacklisting">
+<h4>Blacklisting</h4>
+<p>Now, let's disable a few dangerous functions and allow the rest. The example shows how to disable functions executed with eval() in addition to functions already blacklisted.</p>
+<pre class="code ini"><a name="rest_code_57b3f72934ec4df6be3a1c27e2b31566-1"></a><span class="na">suhosin.executor.func.blacklist</span> <span class="o">=</span> <span class="s">assert,unserialize,exec,popen,proc_open,passthru,shell_exec,system</span>
+<a name="rest_code_57b3f72934ec4df6be3a1c27e2b31566-2"></a><span class="na">suhosin.executor.eval.blacklist</span> <span class="o">=</span> <span class="s">mail,parse_str,mt_srand</span>
+</pre>
+<p><strong>Note:</strong> Of course it is possible to combine function blacklist and eval whitelist or vice versa. The function whitelist/blacklist will always be applied, even in an eval() context.</p>
+</div>
+</div>
+<div class="section" id="finding-out-which-functions-to-allow">
+<h3><a class="toc-backref" href="howtos.html#id9">Finding out which functions to allow</a></h3>
+<p>In order to find out which functions to allow for whitelisting (or to remove from the blacklist for blacklisting), you can use the simulation mode and enable logging:</p>
+<pre class="code ini"><a name="rest_code_a0d6dd8c28ff46789dfdcbb935916042-1"></a><span class="na">suhosin.simulation</span> <span class="o">=</span> <span class="s">1</span>
+<a name="rest_code_a0d6dd8c28ff46789dfdcbb935916042-2"></a><span class="na">suhosin.log.file</span> <span class="o">=</span> <span class="s">511</span>
+<a name="rest_code_a0d6dd8c28ff46789dfdcbb935916042-3"></a><span class="na">suhosin.log.file.name</span> <span class="o">=</span> <span class="s">/tmp/suhosin-alert.log</span>
+</pre>
+<p>Now, use your application and the logfile will show any violation:</p>
+<pre class="literal-block">
+Nov 16 12:01:34 [63213] ALERT-SIMULATION - function outside of whitelist called: preg_replace() (attacker '10.0.0.1', file '/var/www/foo.php', line 2)
+Nov 16 12:01:34 [63213] ALERT-SIMULATION - function outside of whitelist called: strtoupper() (attacker '10.0.0.1', file '/var/www/foo.php', line 2)
+</pre>
+<p>When done, don't forget to re-arm Suhosin:</p>
+<pre class="code ini"><a name="rest_code_cc8a954217614b6dbca61fa9ec819343-1"></a><span class="na">suhosin.simulation</span> <span class="o">=</span> <span class="s">0</span>
+</pre>
+</div>
+<div class="section" id="eval-and-other-language-constructs">
+<h3><a class="toc-backref" href="howtos.html#id10">eval() and other language constructs</a></h3>
+<p>Some functions - most notably <tt class="docutils literal">eval()</tt> - can not be blocked by a function whitelist or blacklist, because they are <a class="reference external" href="http://php.net/manual/en/reserved.keywords.php">language constructs</a> rather than functions. Others are <tt class="docutils literal">__halt_compiler()</tt>, <tt class="docutils literal">array()</tt>, <tt class="docutils literal">die()</tt>, <tt class="docutils literal">empty()</tt>, <tt class="docutils literal">exit()</tt>, <tt class="docutils literal">isset()</tt>, <tt class="docutils literal">list()</tt>, <tt class="docutils literal">unset()</tt>...</p>
+<p>In order to disable <tt class="docutils literal">eval()</tt> entirely, Suhosin provides the following option:</p>
+<pre class="code ini"><a name="rest_code_3546683a470143cab3539602b7dbc802-1"></a><span class="na">suhosin.executor.disable_eval</span> <span class="o">=</span> <span class="s">On</span>
+</pre>
+</div>
+</div>
+<div class="section" id="even-more">
+<h2><a class="toc-backref" href="howtos.html#id11">Even more</a></h2>
+<p>Please take a look at the <a class="reference external" href="configuration.html">configuration page</a> for a complete list of possible configuration options.</p>
+</div>
+</div>
+    </div>
+    
+
+</article><!--End of body content--><footer id="footer"><a href="https://sektioneins.de/en/"><img src="../images/s1-logo-transparent-small.png" id="footerimg"></a><div id="footertext">© 2019 <a href="https://sektioneins.de/en/">SektionEins GmbH</a> • <a href="https://sektioneins.de/en/impressum.html">Imprint</a> • <a href="https://sektioneins.de/en/privacy.html">Privacy Statement</a>
+</div>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>
